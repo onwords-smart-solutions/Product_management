@@ -1,0 +1,112 @@
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+} 
+
+.zoom-hover:hover {
+  transition: transform 0.2s ease-in-out; 
+  transform: scale(1.05);
+}
+
+.zoom-hover:not(:hover) {
+  transition: transform 0.2s ease-in-out; 
+  transform: scale(1);
+} 
+
+.zoom-hover-md:hover {
+  transition: transform 0.2s ease-in-out; 
+  transform: scale(1.1);
+}
+
+.zoom-hover-md:not(:hover) {
+  transition: transform 0.2s ease-in-out; 
+  transform: scale(1);
+}
+
+.rotate-hover:hover {
+  transition: transform 0.5s ease-in-out; 
+  transform: rotate(360deg); 
+  box-shadow: none;
+}
+
+.rotate-hover:not(:hover) {
+  transition: transform 0.5s ease-in-out; 
+  transform: rotate(0deg);
+  box-shadow: none;
+} 
+
+
+/* appscroll */ 
+.appscroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.appscroll::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px; 
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.appscroll::-webkit-scrollbar-thumb {
+  background: #14b8a6;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px; 
+}
+
+.appscroll::-webkit-scrollbar-thumb:hover {
+  background: #14b8a6;
+  border-radius: 10px;
+}
+
+.appscroll::-webkit-scrollbar-thumb:active {
+  background: #14b8a6;
+  border-radius: 10px;
+} 
+
+@keyframes zoom {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.zoom-on-mount {
+  animation: zoom 0.3s ease;
+}
+
+@keyframes zoom-md {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.zoom-on-mount-md {
+  animation: zoom-md 0.25s ease;
+} 
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.fade-out { 
+  animation: fadeOut 10s forwards;
+}
+
