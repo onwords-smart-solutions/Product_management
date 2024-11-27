@@ -1,4 +1,6 @@
-export const pids = [
+
+
+const pids = [
     {
       "date": "27/07/2024",
       "from_product_id": "3chag501",
@@ -250,15 +252,6 @@ export const pids = [
         "to_product_id": "3chrb532",
         "product_type": "3CHRB",
         "no_of_boards": 15,
-        "ide": "UNO",
-        "location": "INSTALLATION"
-    },
-    {
-        "date": "03/09/2024",
-        "from_product_id": "2hsb301",
-        "to_product_id": "2hsb308",
-        "product_type": "2HSB",
-        "no_of_boards": 8,
         "ide": "UNO",
         "location": "INSTALLATION"
     },
@@ -741,15 +734,6 @@ export const pids = [
     },
     {
         "date": "21/10/2024",
-        "from_product_id": "3l1ftc509",
-        "to_product_id": null,
-        "product_type": "3L1FTC",
-        "no_of_boards": 1,
-        "ide": "ESP-IDF",
-        "location": "OFC"
-    },
-    {
-        "date": "21/10/2024",
         "from_product_id": "3ch1frb306",
         "to_product_id": "3ch1frb313",
         "product_type": "3CH1FRB",
@@ -1131,19 +1115,99 @@ export const pids = [
     
 ] 
 
-console.log(pids.length) 
-let count = 0 
+console.log(pids.length)  
+let count = 0  
 
-for (let i=0; i<pids.length; i++) {
-    if (pids[i].hasOwnProperty("location")){
-        count++; 
-    } 
-    else(
-        console.log(pids[i])
-    )
+function print(obj) {
+    console.log(obj)
 }
 
-console.log(count);  
+let new_list = []
+ 
+const type_map = [
+    ["3l1ftc", 6],
+    ["4ltc", 4],
+    ["4l2ftc", 6], 
+    ["6ltc", 4], 
+    ["1htc", 4],
+    ["3ch1frb", 7],
+    ["1hrb", 4], 
+    ["3chag", 5],
+    ["3chsgsl", 7],
+    ["3chsg", 5],
+    ["3chct", 5],
+    ["3chrb", 5],
+] 
+
+function giveFullNum(num) {
+    if (`${num}`.length == 1) {
+        return '00' + num
+    } 
+    else if (`${num}`.length == 2){
+        return '0' + num
+    } 
+    else return num
+}
+
+for (let i = 0; i < pids.length; i++) {
+    let date = pids[i].date.split('/'); 
+    let formattedDate; 
+    if (date.length === 3) { 
+        formattedDate = `${date[2]}-${date[1].padStart(2, '0')}-${date[0].padStart(2, '0')}`;
+    }  
+    
+    if (!pids[i].to_product_id) { 
+        let num_for_n; 
+        for (let k=0; k<type_map.length; k++) {
+            if(pids[i].from_product_id.startsWith(type_map[k][0])) {
+                num_for_n = pids[i].from_product_id.slice(type_map[k][1], pids[i].from_product_id.length) 
+                break; 
+            }
+        }
+        new_list.push({
+            date: formattedDate, 
+            user: 'shibil@onwords.in', 
+            ide: pids[i].ide, 
+            product_type: pids[i].product_type.toLowerCase(),  
+            product_id_number: num_for_n,
+            full_product_id: pids[i].from_product_id,
+        })  
+        //print(pids[i])
+    }
+    else if (pids[i].to_product_id) {
+        for (let j=0; j<type_map.length; j++) {  
+            if (pids[i].from_product_id.startsWith(type_map[j][0])) {  
+                const type_name = type_map[j][0]
+                //console.log(pids[i].from_product_id, pids[i].from_product_id.slice(0, type_map[j][1]), pids[i].from_product_id.slice(type_map[j][1], pids[i].from_product_id.length)) 
+                let start_id = pids[i].from_product_id.slice(type_map[j][1], pids[i].from_product_id.length) 
+                let end_id = pids[i].to_product_id.slice(type_map[j][1], pids[i].to_product_id.length) 
+                // console.log(start_id, end_id, type_name) 
+                let current_id = start_id 
+                while(current_id < Number(end_id) + 1 ) {
+                    new_list.push({
+                        date: formattedDate, 
+                        user: 'shibil@onwords.in', 
+                        ide: pids[i].ide, 
+                        product_type: pids[i].product_type.toLowerCase(), 
+                        product_id_number: giveFullNum(current_id), 
+                        full_product_id: type_name + giveFullNum(current_id),
+                    }) 
+                    current_id++; 
+                }
+                break; 
+            }
+        }
+    } 
+    
+    else {
+        print(pids[i])
+    }
+}
+ 
+console.log(count);    
+console.log(new_list) 
+export default new_list
+
 
 // "date": "25/11/2024",
 // "from_product_id": "3chag655",
