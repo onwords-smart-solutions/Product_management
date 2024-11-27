@@ -75,7 +75,7 @@ function Home() {
           <div className="mt-6 overflow-x-auto rounded-lg shadow-md">
             <table className="min-w-full bg-gray-800 text-left text-gray-300">
               <thead className="bg-gray-700">
-                <tr>
+                <tr className="text-center">
                   <th className="py-2 px-4 border-b border-gray-700">Date</th>
                   <th className="py-2 px-4 border-b border-gray-700">Product ID</th>
                   <th className="py-2 px-4 border-b border-gray-700">Product Type</th>

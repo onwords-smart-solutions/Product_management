@@ -13,7 +13,7 @@
  
 
 
-const enter_data = [
+export const enter_data = [
     { type: "3ch" , stock: 106, sub_types: [
       {type: "ag", stock: 2 , versions: [{version: 'R1P4', stock: 2}]}, 
       {type: "sg", stock: 7, versions: [{version: 'R1P4', stock: 7}]}, 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"; 
 import { db } from '../../FireBase/Config';
 import { get, set, ref } from 'firebase/database';
+import Navbar from "../../Commons/Navbar";
 
 function InputForm() {
   const [deviceType, setDeviceType] = useState("");
@@ -29,7 +30,9 @@ function InputForm() {
     alert("Form submitted!");
   };
 
-  return (
+  return ( 
+    <>
+    <Navbar />
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="max-w-lg w-full p-6 bg-gray-800 rounded-lg shadow-lg border-gray-700">
         <h2 className="text-3xl font-bold text-center text-gray-200 mb-6">
@@ -54,10 +57,19 @@ function InputForm() {
               <option value="" disabled>
                 Select Device Type
               </option> 
-              {deviceTypes && deviceTypes.map((type) => (
-                <option value={type.type} className="flex justify-between">{type.type}</option>
+              {deviceTypes && deviceTypes.map((type) => ( 
+                type.sub_types && ( 
+                  type.sub_types.map((sub) => (
+                    <option value={type.type} className="flex justify-between">{type.type}{sub.type}</option>
+                  ))
+                ) 
               ))
-                
+              } 
+              {deviceTypes && deviceTypes.map((type) => ( 
+                !type.sub_types && (
+                  <option value={type.type} className="flex justify-between">{type.type}</option>
+                ) 
+              ))
               }
               
             </select>
@@ -154,7 +166,8 @@ function InputForm() {
           </div>
         </div>
       </div>
-    </div>
+    </div> 
+    </>
   );
 }
 

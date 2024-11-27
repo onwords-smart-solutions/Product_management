@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navItems = ["Products", "Stocks", "Versions", "Installation Type"];
-  const [selectedItem, setSelectedItem] = useState(navItems[0]);
+  const navItems = ["Assign", "Stocks", "Products", "entries"]
+  const [selectedItem, setSelectedItem] = useState(navItems[0]); 
+  const location = useLocation(); 
+  
+  const navigate = useNavigate(); 
+
 
   return (
     <nav className="bg-gray-900 border-b border-gray-800 shadow-md">
@@ -18,17 +23,25 @@ const Navbar = () => {
             </div>
             {/* Navigation Links (Desktop) */}
             <div className="hidden sm:ml-8 sm:flex sm:space-x-6">
-              {navItems.map((item) => (
                 <button
-                  key={item}
-                  className={`text-gray-300 hover:text-green-400 text-sm font-medium px-3 py-2 ${
-                    selectedItem === item ? "border-b-2 border-green-400" : ""
-                  }`}
-                  onClick={() => setSelectedItem(item)}
+                  className={`text-gray-300 hover:text-green-400 text-sm font-medium ${location.pathname == '/' && 'border-b-2 border-green-400'} px-3 py-2`}
+                  onClick={() => {navigate('/')}}
                 >
-                  {item}
+                  Assign
                 </button>
-              ))}
+                <button
+                  className={`text-gray-300 hover:text-green-400 text-sm ${location.pathname == '/stocks/' && 'border-b-2 border-green-400'} font-medium px-3 py-2`}
+                  onClick={() => {navigate('/stocks/')}}
+                >
+                  Stocks
+                </button>
+                <button
+                  className={`text-gray-300 hover:text-green-400 text-sm ${location.pathname == '/products/' && 'border-b-2 border-green-400'} font-medium px-3 py-2`}
+                  onClick={() => {navigate('/products/')}}
+                >
+                  Products
+                </button>
+              
             </div>
           </div>
 
@@ -60,20 +73,37 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div className={`${isOpen ? "block" : "hidden"} sm:hidden`}>
         <div className="px-4 pb-3 pt-2 space-y-2">
-          {navItems.map((item) => (
+         
             <button
-              key={item}
+              
               onClick={() => {
-                setSelectedItem(item);
-                setIsOpen(false);
+                ' '
               }}
-              className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white ${
-                selectedItem === item ? "font-semibold text-green-400" : ""
-              }`}
+              className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white `}
             >
-              {item}
+              item
             </button>
-          ))}
+
+            <button
+              
+              onClick={() => {
+                ' '
+              }}
+              className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white`}
+            >
+              item
+            </button>
+
+            <button
+             
+              onClick={() => {
+                ' '
+              }}
+              className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white `}
+            >
+              item
+            </button>
+           
           <button className="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg text-center shadow-md">
             Sign Out
           </button>
