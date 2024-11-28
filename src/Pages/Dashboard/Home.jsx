@@ -1,22 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../Commons/Navbar';
 import { db } from '../../FireBase/Config';
-import { get, set, ref } from 'firebase/database';
-import new_list from '../../Commons/plingo';
+import { get, set, ref, remove, query } from 'firebase/database';
+import Loading from '../../Components/Loading/Loading';
+import { transformData } from '../../Commons/DatePad';  
+
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 10; 
+  const [loading, setLoading] = useState(true);  
+
+  const deleteProduct = (product_id) => { 
+
+    const dataRefdb = ref(db, 'products_management/products');
+    get(dataRefdb)
+      .then((snapshot) => {
+        const currentData = snapshot.val(); 
+
+        const new_data = currentData.filter((data) => data.full_product_id != product_id)
+        
+        set(dataRefdb, new_data).then(() => {
+          console.log('updated successfully!') 
+          setData(data.filter(d => d.full_product_id != product_id))
+        })
+  
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+    }
+
+ 
+
 
   useEffect(() => {
     const dataRefdb = ref(db, 'products_management/products');
     get(dataRefdb)
       .then((snapshot) => {
         const fetchedData = snapshot.val();
-        console.log(fetchedData);
-        setData(fetchedData || []);
+        console.log((fetchedData));  
+        
+        setData(transformData(fetchedData) || []); 
+        setLoading(false)
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -53,7 +81,8 @@ function Home() {
   };
 
   return (
-    <>
+    <> 
+    {loading && <Loading />}
       <Navbar />
       <div className="bg-gray-900 text-gray-300 min-h-screen">
         <div className="container mx-auto px-4 py-6">
@@ -82,6 +111,7 @@ function Home() {
                   <th className="py-2 px-4 border-b border-gray-700">Version</th>
                   <th className="py-2 px-4 border-b border-gray-700">Installation Type</th>
                   <th className="py-2 px-4 border-b border-gray-700">Entered By</th>
+                  <th className="py-2 px-4 border-b border-gray-700"></th>
                 </tr>
               </thead>
               <tbody>
@@ -96,6 +126,10 @@ function Home() {
                         {item.installation_type ? item.installation_type : 'bulk entry'}
                       </td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.user}</td>
+                      <td className="py-2 px-4 border-b border-gray-700 font-bold text-red-500">
+                        <button
+                        onClick={() => {deleteProduct(item.full_product_id)}}
+                        className="bg-gray-300 bg-opacity-15 hover:bg-opacity-20 active:bg-opacity-30 px-2 rounded-md pb-1">x</button></td>
                     </tr>
                   ))
                 ) : (

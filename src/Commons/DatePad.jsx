@@ -68,4 +68,17 @@ export const convertTo12HourFormat = (timeStr) => {
     const adjustedHours = hours % 12 || 12; // Convert '0' to '12' for midnight
 
     return `${adjustedHours}:${minutes} ${period}`;
-}
+} 
+
+
+export const transformData = (data) => {
+    const result = [];
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            const transformedObj = { id: key, ...data[key] };
+            result.push(transformedObj);
+        }
+    }
+    return result;
+};
+
