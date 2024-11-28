@@ -1,8 +1,20 @@
-import React from "react";
-import { enter_data as data } from "../../utils/HardData";
-import Navbar from "../../Commons/Navbar";
+import React, { useEffect, useState } from "react";
+import Navbar from "../../Commons/Navbar"; 
+import { db } from "../../FireBase/Config"; 
+import {set, get, ref} from 'firebase/database'
 
-const Stocks = () => {
+
+const Stocks = () => { 
+  const [data, setData] = useState([]); 
+
+  useEffect(() => {
+    const getDataRef = ref(db, 'products_management/device_types')
+    
+    get(getDataRef).then((res) => {
+      setData(res.val())
+    })
+  }, [])
+
   return (
     <>
     <Navbar />

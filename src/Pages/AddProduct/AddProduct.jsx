@@ -3,7 +3,9 @@ import { db } from '../../FireBase/Config';
 import { get, ref, set  } from 'firebase/database';
 import Navbar from "../../Commons/Navbar";
 import { todayFormatted } from "../../Commons/DatePad"; 
-import new_list from "../../Commons/plingo";
+ 
+ 
+ 
 
 function InputForm() {
   const [deviceType, setDeviceType] = useState("");
@@ -14,7 +16,8 @@ function InputForm() {
   const [idFrom, setIDFrom] = useState(''); 
   const [idTo, setIDTo] = useState(''); 
   const [versions, setVersions] = useState([]);  
-  const [version, setVersion] = useState(''); 
+  const [version, setVersion] = useState('');  
+  const [uniqueError, setUniqueError] = useState(''); 
 
   useEffect(() => {
     const deviceTypeRef = ref(db, 'products_management/device_types') 
@@ -25,7 +28,8 @@ function InputForm() {
     })
 
     get(deviceTypeRef).then((res) => {
-    setDeviceTypes(res.val()); 
+    setDeviceTypes(res.val());  
+    console.log(res.val())
     }) 
     
   }, [])
@@ -36,38 +40,62 @@ function InputForm() {
     get(dataRefdb)
       .then((snapshot) => {
         const currentData = snapshot.val(); 
-        const next_index = currentData.length;  
+          
+          const new_data = [...currentData]  
 
-        const new_data = [...currentData,  {
-          date: todayFormatted(), 
-          full_product_id: deviceType + idFrom, 
-          ide, 
-          product_id_number: idFrom, 
-          product_type: deviceType, 
-          user: 'user',
-        }]
+          let  foundDuplicate = false;  
+
+          let current_id = idFrom; 
+          while (current_id < Number(idTo) + 1) { 
+
+            const new_product_id = deviceType + current_id;   
+            const filtered_uniques = currentData.filter((data) => data.full_product_id == new_product_id);  
+
+            if (!filtered_uniques.length) {
+              new_data.push({
+                date: todayFormatted(), 
+                full_product_id: new_product_id, 
+                ide, 
+                product_id_number: current_id, 
+                product_type: deviceType, 
+                user: 'prem@onwords.in',
+                }
+              ) 
+            } 
+            else {
+              foundDuplicate = true
+            } 
+            current_id++; 
+
+           
+        }
+          console.log(foundDuplicate)
+          console.log(new_data, idFrom, idTo) 
+
+          if (!foundDuplicate) {
+          set(dataRefdb, new_data).then(() => {
+            console.log('updated successfully!') 
+            setUniqueError('')
+          }) 
+          } 
+          else(setUniqueError('product id/s already exists!'))
+
         
-        set(dataRefdb, new_data).then(() => {
-          console.log('updated successfully!')
-        })
   
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-
-
-    console.log(deviceType, version, productId, ide, installationType, deviceType, idFrom, idTo, installationType)
-    const updateProductRef = ref(db, 'products_management/products'); 
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+ 
    
    } 
 
    function suna() {
     const addAllRef = ref(db, 'products_management/products')  
   
-      set(addAllRef, new_list).then(() => {
-        console.log('added succw')
-      })
+      // set(addAllRef, new_list).then(() => {
+      //   console.log('added succw')
+      // })
     
      
    }
@@ -95,7 +123,11 @@ function InputForm() {
             <select
               id="deviceType"
               value={deviceType}
-              onChange={(e) => setDeviceType(e.target.value)}
+              onChange={(e) => {
+                setDeviceType(e.target.value)
+              }
+                
+              }
               className="w-full p-2 bg-gray-700 border border-gray-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 hover:bg-gray-600"
               required
             >
@@ -177,7 +209,8 @@ function InputForm() {
               required
             /> 
             </div>
-            </div>
+            </div> 
+            <small className="text-red-500">{uniqueError}</small>
           </div>
 
           {/* IDE */}
