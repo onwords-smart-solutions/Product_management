@@ -1,67 +1,71 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../../Commons/Navbar"; 
-import { db } from "../../FireBase/Config"; 
-import {set, get, ref} from 'firebase/database'
-import StockEditModal from "../../StockEditModal/StockEditModal";
+import React, { useEffect, useState, version } from 'react'
 
+function StockEditModal(props) {  
 
-const Stocks = () => { 
-  const [data, setData] = useState([]);  
-  const [selectedItem, setSelectedItem] = useState(null);  
-  const [showModal, setShowModal] = useState(false); 
+    const [currentObject, setCurrentObject] = useState(); 
 
-  useEffect(() => {
-    const getDataRef = ref(db, 'products_management/device_types')
+    useEffect(() => {
+        console.log(props.selectedItem);  
+        setCurrentObject(props.selectedItem);
+    }, []) 
+
+    function changeValue(value, version) {
+        const updatedVersions = currentObject.versions.map(v => 
+            v.version === version ? { ...v, stock: value } : v
+        );
     
-    get(getDataRef).then((res) => {
-      setData(res.val()) 
-    })
-  }, [])
+        console.log(version, value);
+        setCurrentObject({
+            ...currentObject,
+            versions: updatedVersions,
+        });
+    }
+    
 
   return (
-    <> 
-    {showModal && <StockEditModal 
-    selectedItem={selectedItem}
-    showModal={showModal} setShowModal={setShowModal}/>}
-    <Navbar /> 
-
-    <div className="min-h-screen bg-gray-900 py-6">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-200 mb-6">Stocks Overview</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.map((item, index) => (
-            <div 
-              onClick={() => {
-                setShowModal(true) 
-                setSelectedItem(item)
-              }}
-              key={index}
-              className="bg-gray-800 cursor-pointer zoom-hover shadow-md rounded-lg border border-gray-700 p-4"
+    <div  
+    
+    className="fixed inset-0 bg-black z-40 bg-opacity-30 flex justify-center">
+        <div className="flex justify-between bg-gray-600 shadow-xl w-full md:w-1/3 sm:w-1/2 h-2/3 my-auto rounded-xl">
+        <div border
+              className="bg-gray-800 flex-grow cursor-pointer zoom-hover shadow-md rounded-lg border border-gray-700 p-4"
             >
-              {/* Type and Stock */}
+              {/* Type and Stock */} 
+              <div className="flex flex-row justify-between mb-3">
+                
+                <button className="invisible">x</button>
+                <button 
+                onClick={() => props.setShowModal(false)}
+                className="border px-3 rounded-md pb-1 hover:bg-white hover:bg-opacity-5 active:bg-white active:bg-opacity-15 text-white">x</button> 
+
+                </div>
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold text-gray-100">
-                  {item.type.toUpperCase()}
+                  {currentObject?.type.toUpperCase()}
                 </h2>
                 <span className="text-sm text-gray-400">
-                  Stock: {item.stock}
+                  Stock: {currentObject?.stock}
                 </span>
               </div>
 
               {/* Versions */}
-              {item.versions && (
+              {currentObject?.versions && (
                 <div>
                   <h3 className="text-lg font-medium text-gray-300 mb-2">
                     Versions:
                   </h3>
                   <ul className="list-disc pl-5 space-y-1">
-                    {item.versions.map((version, versionIndex) => (
+                    {currentObject?.versions.map((version, versionIndex) => (
                       <li
                         key={versionIndex}
                         className="text-gray-400 flex justify-between"
                       >
                         <span>{version.version}</span>
-                        <span>Stock: {version.stock}</span>
+                        <input type="text" className="w-12 text-center text-gray-800 rounded-md " 
+
+                        onChange={(e) => changeValue(e.target.value, version.version)}
+
+                        value={version.stock}/>
                       </li>
                     ))}
                   </ul>
@@ -69,13 +73,13 @@ const Stocks = () => {
               )}
 
               {/* Sub-types */}
-              {item.sub_types && (
+              {currentObject?.sub_types && (
                 <div>
                   <h3 className="text-lg font-medium text-gray-300 mt-4 mb-2">
                     Sub-types:
                   </h3>
                   <div className="space-y-3">
-                    {item.sub_types.map((subType, subIndex) => (
+                    {currentObject?.sub_types.map((subType, subIndex) => (
                       <div
                         key={subIndex}
                         className="bg-gray-700 p-3 rounded-lg border border-gray-600"
@@ -104,12 +108,9 @@ const Stocks = () => {
                 </div>
               )}
             </div>
-          ))}
         </div>
-      </div>
     </div>
-    </>
-  );
-};
+  )
+}
 
-export default Stocks;
+export default StockEditModal
