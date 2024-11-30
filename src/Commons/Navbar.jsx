@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logOut } from "../Redux/AuthSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,7 +10,8 @@ const Navbar = () => {
   const [selectedItem, setSelectedItem] = useState(navItems[0]); 
   const location = useLocation(); 
   
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();  
+  const dispatch = useDispatch(); 
 
 
   return (
@@ -47,7 +50,13 @@ const Navbar = () => {
 
           {/* Right Section: Sign-Out Button */}
           <div className="hidden sm:flex sm:items-center">
-            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md">
+            <button
+            onClick={() => {
+              dispatch(logOut()) 
+              navigate('/login/')
+            }
+            }
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md">
               Sign Out
             </button>
           </div>

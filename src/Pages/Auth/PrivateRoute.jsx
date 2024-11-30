@@ -11,10 +11,6 @@ function PrivateRoute(props) {
         if (!state.user.email) { 
             navigate("/login/", { replace: true }); 
 
-        } 
-        
-        if (!(state.user.role == 'sm' || state.user.role == 'dev')) {
-          navigate("/login/", { replace: true });
         }
 
     }, [])

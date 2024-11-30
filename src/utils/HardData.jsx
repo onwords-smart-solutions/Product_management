@@ -3,22 +3,13 @@
   export const accesible_emails = [
     "shibil@onwords.in", 
     "prem@onwords.in",
-    "coo@onwords.in",
-    "kavin@onwords.in",
-    "subash@onwords.in", 
-    "akshya@onwords.in", 
-    "balakrishnan@onwords.in",
-    "ceo@onwords.in",
   ];  
  
 
 
 export const enter_data = [
-    { type: "3ch" , stock: 106, sub_types: [
-      {type: "ag", stock: 2 , versions: [{version: 'R1P4', stock: 2}]}, 
-      {type: "sg", stock: 7, versions: [{version: 'R1P4', stock: 7}]}, 
-      {type: "sgsl", stock: 23, versions: [{version: 'R1P4', stock: 23}]}, 
-      {type: "ct", stock: 72, versions: [{version: 'R1P4', stock: 72}]},
+    { type: "3ch" , stock: 106, versions: [
+      {version: 'R1P4', stock: 106}
     ]}, 
     {type: "4ltc", stock: 52, versions:[
       {version: 'R1P1-TOUCH', stock: 17}, 

@@ -3,7 +3,8 @@ import { db } from '../../FireBase/Config';
 import { get, ref, set  } from 'firebase/database';
 import Navbar from "../../Commons/Navbar";
 import { todayFormatted } from "../../Commons/DatePad"; 
- 
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
  
  
 
@@ -18,10 +19,15 @@ function InputForm() {
   const [versions, setVersions] = useState([]);  
   const [version, setVersion] = useState('');  
   const [uniqueError, setUniqueError] = useState(''); 
+  const state = useSelector(state => state.auth); 
+  const [viewVersions, setViewVersions] = useState([]); 
+  const navigate = useNavigate()
 
   useEffect(() => {
     const deviceTypeRef = ref(db, 'products_management/device_types') 
-    const versionRef = ref(db, 'products_management/versions') 
+    const versionRef = ref(db, 'products_management/versions')  
+    ; 
+    
 
     get(versionRef).then((res) => {
       setVersions(res.val()); 
@@ -29,7 +35,7 @@ function InputForm() {
 
     get(deviceTypeRef).then((res) => {
     setDeviceTypes(res.val());  
-    console.log(res.val())
+   
     }) 
     
   }, [])
@@ -58,7 +64,7 @@ function InputForm() {
                 ide, 
                 product_id_number: current_id, 
                 product_type: deviceType, 
-                user: 'prem@onwords.in',
+                user: state?.user?.email,
                 }
               ) 
             } 
@@ -69,13 +75,12 @@ function InputForm() {
 
            
         }
-          console.log(foundDuplicate)
-          console.log(new_data, idFrom, idTo) 
-
+           
           if (!foundDuplicate) {
           set(dataRefdb, new_data).then(() => {
             console.log('updated successfully!') 
-            setUniqueError('')
+            setUniqueError('') 
+            navigate('/products/')
           }) 
           } 
           else(setUniqueError('product id/s already exists!'))
@@ -91,9 +96,9 @@ function InputForm() {
    } 
 
    function suna() {
-    const addAllRef = ref(db, 'products_management/products')  
+    const addAllRef = ref(db, 'products_management/device_types')  
   
-      // set(addAllRef, new_list).then(() => {
+      // set(addAllRef, enter_data).then(() => {
       //   console.log('added succw')
       // })
     
@@ -124,7 +129,9 @@ function InputForm() {
               id="deviceType"
               value={deviceType}
               onChange={(e) => {
-                setDeviceType(e.target.value)
+                setDeviceType(e.target.value) 
+                setViewVersions(deviceTypes.filter(type => type.type == deviceType)[0].versions)
+                 
               }
                 
               }
@@ -163,7 +170,7 @@ function InputForm() {
                 Select Version
               </option> 
 
-              {versions && versions.map((version) => ( 
+              {viewVersions && viewVersions.map((version) => ( 
                 
                   <option value={version.version} className="flex justify-between">{version.version}</option>
                

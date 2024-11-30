@@ -21,6 +21,10 @@ function StockEditModal(props) {
             versions: updatedVersions,
         }); 
         }
+    } 
+
+    function changeValueOfSubType(value, sub_type, version) {
+
     }
     
 
@@ -97,14 +101,7 @@ function StockEditModal(props) {
                           </span>
                         </div>
                         <ul className="list-disc pl-5 mt-2">
-                          {subType.versions.map((version, versionIndex) => (
-                            <li
-                              key={versionIndex}
-                              className="text-gray-400 text-sm"
-                            >
-                              {version.version}: {version.stock}
-                            </li>
-                          ))}
+                           
                         </ul>
                       </div>
                     ))}

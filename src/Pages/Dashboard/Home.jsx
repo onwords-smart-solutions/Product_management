@@ -108,7 +108,6 @@ function Home() {
                   <th className="py-2 px-4 border-b border-gray-700">Date</th>
                   <th className="py-2 px-4 border-b border-gray-700">Product ID</th>
                   <th className="py-2 px-4 border-b border-gray-700">Product Type</th>
-                  <th className="py-2 px-4 border-b border-gray-700">Version</th>
                   <th className="py-2 px-4 border-b border-gray-700">Installation Type</th>
                   <th className="py-2 px-4 border-b border-gray-700">Entered By</th>
                   <th className="py-2 px-4 border-b border-gray-700"></th>
@@ -121,7 +120,7 @@ function Home() {
                       <td className="py-2 px-4 border-b border-gray-700">{item.date}</td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.full_product_id}</td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.product_type}</td>
-                      <td className="py-2 px-4 border-b border-gray-700">{item.version}</td>
+                      
                       <td className="py-2 px-4 border-b border-gray-700">
                         {item.installation_type ? item.installation_type : 'bulk entry'}
                       </td>
