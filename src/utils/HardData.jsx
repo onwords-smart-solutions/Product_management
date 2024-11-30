@@ -2,7 +2,8 @@
 
   export const accesible_emails = [
     "shibil@onwords.in", 
-    "prem@onwords.in",
+    "prem@onwords.in", 
+    "ahmed.anwar@onwords.in",
   ];  
  
 
