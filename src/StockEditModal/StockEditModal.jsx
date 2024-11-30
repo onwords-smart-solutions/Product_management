@@ -9,16 +9,18 @@ function StockEditModal(props) {
         setCurrentObject(props.selectedItem);
     }, []) 
 
-    function changeValue(value, version) {
+    function changeValue(value, version) { 
+        if (!isNaN(value)) {
         const updatedVersions = currentObject.versions.map(v => 
-            v.version === version ? { ...v, stock: value } : v
+            v.version === version ? { ...v, stock: Number(value) } : v
         );
     
-        console.log(version, value);
+         
         setCurrentObject({
             ...currentObject,
             versions: updatedVersions,
-        });
+        }); 
+        }
     }
     
 
@@ -27,8 +29,10 @@ function StockEditModal(props) {
     
     className="fixed inset-0 bg-black z-40 bg-opacity-30 flex justify-center">
         <div className="flex justify-between bg-gray-600 shadow-xl w-full md:w-1/3 sm:w-1/2 h-2/3 my-auto rounded-xl">
-        <div border
-              className="bg-gray-800 flex-grow cursor-pointer zoom-hover shadow-md rounded-lg border border-gray-700 p-4"
+        <div 
+            className="bg-gray-800 
+            overflow-y-scroll hide-scrollbar
+            flex-grow cursor-pointer zoom-hover shadow-md rounded-lg border border-gray-700 p-4"
             >
               {/* Type and Stock */} 
               <div className="flex flex-row justify-between mb-3">
@@ -106,7 +110,22 @@ function StockEditModal(props) {
                     ))}
                   </div>
                 </div>
-              )}
+              )} 
+
+                <div className="flex">
+                    <button 
+                     className="bg-gradient-to-r
+                     bg-green-700 mt-3 mx-auto text-white px-4 
+                      py-2 font-bold rounded-md hover:opacity-90 active:opacity-80" 
+                      onClick={() => {
+                        props.updateStockFB(currentObject) 
+                        props.setShowModal(false)
+                      }}
+                     >
+                    
+                    Save</button>
+                </div>
+
             </div>
         </div>
     </div>

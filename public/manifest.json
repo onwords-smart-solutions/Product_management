@@ -1,6 +1,6 @@
 {
-    "name": "CRM Web App",
-    "short_name": "CRM",
+    "name": "Stock Management Onwords",
+    "short_name": "Stock",
     "description": "Customer Relationship Management!",
     "start_url": ".",
     "display": "standalone",

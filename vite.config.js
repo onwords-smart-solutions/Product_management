@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'CRM Web App',
-        short_name: 'CRM',
+        name: 'Stock Management CRM',
+        short_name: 'Stock',
         description: 'Customer Relationship Management',
         theme_color: '#ffffff',
         icons: [

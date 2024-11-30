@@ -16,12 +16,28 @@ const Stocks = () => {
     get(getDataRef).then((res) => {
       setData(res.val()) 
     })
-  }, [])
+  }, []) 
+
+  function updateStockFB(new_type) {
+    const updateRef = ref(db, 'products_management/device_types')
+    let total_count = 0; 
+    for (let i=0; i<new_type.versions.length; i++) { 
+      total_count = total_count + new_type.versions[i].stock; 
+    }   
+    new_type.stock = total_count;  
+    console.log(new_type, new_type.versions)
+    const updated_list = data.map(d => d.type == new_type.type ? new_type : d)  
+    
+    set(updateRef, updated_list).then(() => {
+      console.log('updated successfully!') 
+      setData(updated_list); 
+    })
+  }
 
   return (
     <> 
     {showModal && <StockEditModal 
-    selectedItem={selectedItem}
+    selectedItem={selectedItem} updateStockFB={updateStockFB}
     showModal={showModal} setShowModal={setShowModal}/>}
     <Navbar /> 
 
