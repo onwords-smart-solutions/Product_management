@@ -85,32 +85,26 @@ const Navbar = () => {
          
             <button
               
-              onClick={() => {
-                ' '
-              }}
+              onClick={() => {navigate('/')}}
               className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white `}
             >
-              item
+              Assign
             </button>
 
             <button
               
-              onClick={() => {
-                ' '
-              }}
+              onClick={() => {navigate('/stocks/')}}
               className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white`}
             >
-              item
+              Stock
             </button>
 
             <button
              
-              onClick={() => {
-                ' '
-              }}
+             onClick={() => {navigate('/products/')}}
               className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white `}
             >
-              item
+              Products
             </button>
            
           <button className="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg text-center shadow-md">

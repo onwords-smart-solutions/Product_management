@@ -103,7 +103,14 @@ function InputForm() {
       // })
     
      
-   }
+   } 
+
+   function onTypeSelect(e) 
+    {
+      setDeviceType(e.target.value) 
+      setViewVersions(deviceTypes.filter(type => type.type == e.target.value)[0].versions)
+       
+    }
 
   return ( 
     <> 
@@ -128,11 +135,7 @@ function InputForm() {
             <select
               id="deviceType"
               value={deviceType}
-              onChange={(e) => {
-                setDeviceType(e.target.value) 
-                setViewVersions(deviceTypes.filter(type => type.type == deviceType)[0].versions)
-                 
-              }
+              onChange={(e) => onTypeSelect(e)
                 
               }
               className="w-full p-2 bg-gray-700 border border-gray-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 hover:bg-gray-600"
