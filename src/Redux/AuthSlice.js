@@ -3,6 +3,7 @@ import {createSlice} from '@reduxjs/toolkit'
 const INITIAL_STATE = {
     user: {
         email: '', 
+        role: ''
     }
 } 
 
@@ -13,10 +14,12 @@ export const authSlice = createSlice({
         changeAuthMode: (state, action) => { 
             state.user = {
                 email: action.payload.email, 
+                role: action.payload.role
             }
         }, 
         logOut: (state, action) => {
-            state.user.email = ''
+            state.user.email = '', 
+            state.user.role = ''
         }
     }
 }) 

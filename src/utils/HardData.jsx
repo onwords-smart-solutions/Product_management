@@ -3,8 +3,32 @@
   export const accesible_emails = [
     "shibil@onwords.in", 
     "prem@onwords.in", 
-    "ahmed.anwar@onwords.in",
-  ];  
+    "ahmed.anwar@onwords.in", 
+    "rahul@onwords.in", 
+    "ceo@onwords.in", 
+    "coo@onwords.in",
+    "kavin@onwords.in",
+    "mpmani03@gmail.com",
+  ];   
+
+  export const viewer_emails = [
+    "rahul@onwords.in", 
+    "ceo@onwords.in", 
+    "coo@onwords.in",
+    "kavin@onwords.in",
+    "mpmani03@gmail.com",
+  ] 
+
+  export const editor_emails = [
+    "jeyabalan@onwords.in",
+    "shankarasaravanan@onwords.in",
+  ] 
+
+  export const owner_emails = [
+    "prem@onwords.in ",
+    "ahmed.anwar@onwords.in", 
+    "shibil@onwords.in",
+  ]
  
 
 
