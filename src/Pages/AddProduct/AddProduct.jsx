@@ -5,6 +5,7 @@ import Navbar from "../../Commons/Navbar";
 import { todayFormatted } from "../../Commons/DatePad"; 
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+// import new_list from "../../Commons/plingo";
  
  
 
@@ -96,9 +97,9 @@ function InputForm() {
    } 
 
    function suna() {
-    const addAllRef = ref(db, 'products_management/device_types')  
+    const addAllRef = ref(db, 'products_management/products')  
   
-      // set(addAllRef, enter_data).then(() => {
+      // set(addAllRef, new_list).then(() => {
       //   console.log('added succw')
       // })
     
@@ -106,9 +107,13 @@ function InputForm() {
    } 
 
    function onTypeSelect(e) 
-    {
+    { 
+      let our_type = e.target.value; 
+      if (e.target.value.startsWith('3ch')) {
+        our_type = '3ch'
+      }
       setDeviceType(e.target.value) 
-      setViewVersions(deviceTypes.filter(type => type.type == e.target.value)[0].versions)
+      setViewVersions(deviceTypes.filter(type => type.type == our_type)[0].versions)
        
     }
 
@@ -144,11 +149,11 @@ function InputForm() {
               <option value="" disabled>
                 Select Device Type & version
               </option> 
-              <option value="3ch" className="flex justify-between">3chag</option>
-              <option value="3ch" className="flex justify-between">3chsg</option>
-              <option value="3ch" className="flex justify-between">3chct</option>
-              <option value="3ch" className="flex justify-between">3chsgsl</option>
-              <option value="3ch" className="flex justify-between">3chrb</option>
+              <option value="3chag" className="flex justify-between">3chag</option>
+              <option value="3chsg" className="flex justify-between">3chsg</option>
+              <option value="3chct" className="flex justify-between">3chct</option>
+              <option value="3chsgsl" className="flex justify-between">3chsgsl</option>
+              <option value="3chrb" className="flex justify-between">3chrb</option>
               {deviceTypes && deviceTypes.map((type) => ( 
                 
                <option value={type.type} className="flex justify-between">{type.type}</option>
