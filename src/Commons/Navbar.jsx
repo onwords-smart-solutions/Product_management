@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../Redux/AuthSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navItems = ["Assign", "Stocks", "Products", "entries"]
   const [selectedItem, setSelectedItem] = useState(navItems[0]); 
+  const state = useSelector(state => state.auth);  
+
   const location = useLocation(); 
-  
   const navigate = useNavigate();  
   const dispatch = useDispatch(); 
 
@@ -26,24 +27,35 @@ const Navbar = () => {
             </div>
             {/* Navigation Links (Desktop) */}
             <div className="hidden sm:ml-8 sm:flex sm:space-x-6">
-                <button
-                  className={`text-gray-300 hover:text-green-400 text-sm font-medium ${location.pathname == '/' && 'border-b-2 border-green-400'} px-3 py-2`}
+                  <button
+                  className={`text-gray-300 hover:text-green-400 text-sm ${location.pathname == '/' && 'border-b-2 border-green-400'} font-medium px-3 py-2`}
                   onClick={() => {navigate('/')}}
+                 >
+                  Stocks
+                </button> 
+                {(state.user.role == 'owner' || state.user.role == 'editor') && (
+                  <>
+                   <button
+                  className={`text-gray-300 hover:text-green-400 text-sm font-medium ${location.pathname == '/assign/' && 'border-b-2 border-green-400'} px-3 py-2`}
+                  onClick={() => {navigate('/assign')}}
                 >
                   Assign
                 </button>
-                <button
-                  className={`text-gray-300 hover:text-green-400 text-sm ${location.pathname == '/stocks/' && 'border-b-2 border-green-400'} font-medium px-3 py-2`}
-                  onClick={() => {navigate('/stocks/')}}
-                >
-                  Stocks
-                </button>
-                <button
+                  </>
+                )}
+               
+                
+                {(state.user.role == 'owner' || state.user.role == 'editor') && (
+                  <>
+                   <button
                   className={`text-gray-300 hover:text-green-400 text-sm ${location.pathname == '/products/' && 'border-b-2 border-green-400'} font-medium px-3 py-2`}
                   onClick={() => {navigate('/products/')}}
                 >
                   Products
                 </button>
+                  </>
+                )}
+               
               
             </div>
           </div>
@@ -83,20 +95,22 @@ const Navbar = () => {
       <div className={`${isOpen ? "block" : "hidden"} sm:hidden`}>
         <div className="px-4 pb-3 pt-2 space-y-2">
          
-            <button
-              
-              onClick={() => {navigate('/')}}
-              className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white `}
-            >
-              Assign
-            </button>
+           
 
             <button
               
-              onClick={() => {navigate('/stocks/')}}
+              onClick={() => {navigate('/')}}
               className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white`}
             >
               Stock
+            </button> 
+
+            <button
+              
+              onClick={() => {navigate('/assign/')}}
+              className={`block text-left w-full px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white `}
+            >
+              Assign
             </button>
 
             <button

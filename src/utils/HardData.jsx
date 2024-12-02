@@ -9,6 +9,7 @@
     "coo@onwords.in",
     "kavin@onwords.in",
     "mpmani03@gmail.com",
+    "jeyabalan@onwords.in",
   ];   
 
   export const viewer_emails = [

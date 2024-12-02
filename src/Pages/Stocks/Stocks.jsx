@@ -3,12 +3,14 @@ import Navbar from "../../Commons/Navbar";
 import { db } from "../../FireBase/Config"; 
 import {set, get, ref} from 'firebase/database'
 import StockEditModal from "../../StockEditModal/StockEditModal";
+import { useSelector } from "react-redux";
 
 
 const Stocks = () => { 
   const [data, setData] = useState([]);  
   const [selectedItem, setSelectedItem] = useState(null);  
-  const [showModal, setShowModal] = useState(false); 
+  const [showModal, setShowModal] = useState(false);  
+  const state = useSelector(state => state.auth); 
 
   useEffect(() => {
     const getDataRef = ref(db, 'products_management/device_types')
@@ -71,9 +73,12 @@ const Stocks = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.map((item, index) => (
             <div 
-              onClick={() => {
-                setShowModal(true) 
-                setSelectedItem(item)
+              onClick={() => {  
+                if  (state.user.role == 'owner') {
+                  setShowModal(true) 
+                  setSelectedItem(item)
+                }
+                
               }}
               key={index}
               className="bg-gray-800 cursor-pointer zoom-hover shadow-md rounded-lg border border-gray-700 p-4"

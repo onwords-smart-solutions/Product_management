@@ -15,11 +15,11 @@ function App() {
       {/* <Notifications /> */}
       {/* <InstallButton /> */}
       <Routes>
-        <Route exact path='/' element={<PrivateRoute element={AddProduct} /> } />
+        <Route exact path='/assign' element={<PrivateRoute element={AddProduct} /> } />
        
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/products' element={<PrivateRoute element={Home} />}/>
-        <Route path='/stocks' element={<PrivateRoute element={Stocks} />}/>
+        <Route path='/' element={<PrivateRoute element={Stocks} />}/>
         
       </Routes>
     </>

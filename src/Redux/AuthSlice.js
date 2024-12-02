@@ -12,6 +12,7 @@ export const authSlice = createSlice({
     initialState: INITIAL_STATE, 
     reducers: {
         changeAuthMode: (state, action) => { 
+            console.log(action.payload)
             state.user = {
                 email: action.payload.email, 
                 role: action.payload.role

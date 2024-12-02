@@ -8,7 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import Font
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"; // Import specific icons 
 
 import { 
-  accesible_emails, 
+  accesible_emails,  
+  viewer_emails, 
+  editor_emails, 
+  owner_emails
  } from "../../utils/HardData"; 
 
 
@@ -26,10 +29,8 @@ function Login() {
 
   useEffect(() => {
     console.log(state.user.email);
-    if (state.user.email) {
-      if (state.user == 'sm') {
-        navigate("/"); 
-      } 
+    if (state.user.email) { 
+      navigate("/");       
     }
   }, []);
 
@@ -42,7 +43,8 @@ function Login() {
 
           dispatch(
             changeAuthMode({
-              email: email,
+              email: email, 
+              role: viewer_emails.includes(email) ? 'viewer' : (editor_emails.includes(email) ? 'editor' : 'owner')
             })
           );
           navigate("/");
