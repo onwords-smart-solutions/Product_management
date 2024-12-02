@@ -41,7 +41,7 @@ function Home() {
     get(dataRefdb)
       .then((snapshot) => {
         const fetchedData = snapshot.val();
-        console.log((fetchedData));  
+         console.log((fetchedData.length));  
         
         setData(transformData(fetchedData) || []); 
         setLoading(false)

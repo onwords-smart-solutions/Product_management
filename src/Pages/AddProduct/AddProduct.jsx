@@ -43,7 +43,9 @@ function InputForm() {
 
   const AddProductSubmit = () => { 
 
-    const dataRefdb = ref(db, 'products_management/products');
+    const dataRefdb = ref(db, 'products_management/products'); 
+    const typeRef = ref(db, 'products_management/device_types'); 
+
     get(dataRefdb)
       .then((snapshot) => {
         const currentData = snapshot.val(); 
@@ -51,7 +53,10 @@ function InputForm() {
           const new_data = [...currentData]  
 
           let  foundDuplicate = false;  
-
+          const outStock = 1 +  Number(idTo - idFrom);   
+          const here_type = deviceType.startsWith('3ch') ? '3ch' : deviceType 
+          
+          console.log(outStock, here_type, 'out stock')
           let current_id = idFrom; 
           while (current_id < Number(idTo) + 1) { 
 
@@ -65,6 +70,7 @@ function InputForm() {
                 ide, 
                 product_id_number: current_id, 
                 product_type: deviceType, 
+                installation_type: installationType,
                 user: state?.user?.email,
                 }
               ) 
@@ -75,14 +81,26 @@ function InputForm() {
             current_id++; 
 
            
-        }
+        } 
+
+        let new_type_to_add = deviceTypes.filter(type => type.type == here_type)[0] 
+         
+        
+        new_type_to_add.stock = new_type_to_add.stock - outStock 
+        new_type_to_add.versions = new_type_to_add.versions.map(v => v.version == version ? {stock: v.stock - outStock, version: v.version} : v)  
+
+        const new_stock_type_list = deviceTypes.map(type => type.type == here_type ? new_type_to_add : type)
+        console.log(new_stock_type_list)
            
           if (!foundDuplicate) {
-          set(dataRefdb, new_data).then(() => {
-            console.log('updated successfully!') 
-            setUniqueError('') 
-            navigate('/products/')
-          }) 
+            set(dataRefdb, new_data).then(() => {
+              console.log('updated successfully!') 
+              setUniqueError('') 
+              navigate('/products/')
+            })  
+            set(typeRef, new_stock_type_list).then(() => {
+              console.log('stock updated!')
+            })
           } 
           else(setUniqueError('product id/s already exists!'))
 

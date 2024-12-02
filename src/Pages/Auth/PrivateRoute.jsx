@@ -8,7 +8,8 @@ function PrivateRoute(props) {
     const navigate = useNavigate(); 
 
     useEffect(() => {
-        if (!state.user.email) { 
+        if (!state.user.email.length) {  
+          console.log(state.user.email, state.user.email.length)
             navigate("/login/", { replace: true }); 
 
         }
