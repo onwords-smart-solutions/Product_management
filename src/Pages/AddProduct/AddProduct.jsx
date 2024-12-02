@@ -172,7 +172,9 @@ function InputForm() {
               <option value="3chct" className="flex justify-between">3chct</option>
               <option value="3chsgsl" className="flex justify-between">3chsgsl</option>
               <option value="3chrb" className="flex justify-between">3chrb</option>
-              {deviceTypes && deviceTypes.map((type) => ( 
+              {deviceTypes && deviceTypes
+              .filter((type) => type.type != '3ch')
+              .map((type) => ( 
                 
                <option value={type.type} className="flex justify-between">{type.type}</option>
                 
