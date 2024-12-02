@@ -107,7 +107,13 @@ const Navbar = () => {
               Products
             </button>
            
-          <button className="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg text-center shadow-md">
+          <button
+         onClick={() => {
+          dispatch(logOut()) 
+          navigate('/login/')
+        }
+        }
+          className="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg text-center shadow-md">
             Sign Out
           </button>
         </div>
