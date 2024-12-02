@@ -16,7 +16,31 @@ const Stocks = () => {
     get(getDataRef).then((res) => {
       setData(res.val()) 
     })
-  }, []) 
+  }, [])  
+
+  function touchStocks(version_list) { 
+     
+    let sum = 0; 
+    for (let v=0; v < version_list.length; v++) { 
+       
+      if (version_list[v].version?.includes('TOUCH')) {
+        sum += version_list[v].stock
+      }
+    } 
+    return sum
+  } 
+
+  function controlStocks(version_list) {
+    let sum = 0; 
+    for (let v=0; v < version_list.length; v++) { 
+       
+      if (version_list[v].version?.includes('CONTROL')) {
+        sum += version_list[v].stock
+      }
+    } 
+    return sum
+  }
+  
 
   function updateStockFB(new_type) {
     const updateRef = ref(db, 'products_management/device_types')
@@ -25,7 +49,7 @@ const Stocks = () => {
       total_count = total_count + new_type.versions[i].stock; 
     }   
     new_type.stock = total_count;  
-    console.log(new_type, new_type.versions)
+     
     const updated_list = data.map(d => d.type == new_type.type ? new_type : d)  
     
     set(updateRef, updated_list).then(() => {
@@ -66,10 +90,16 @@ const Stocks = () => {
 
               {/* Versions */}
               {item.versions && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-300 mb-2">
-                    Versions:
-                  </h3>
+                <div> 
+                  {touchStocks(item.versions) != 0 && controlStocks(item.versions) != 0 && (
+                    <> 
+                     <div className="flex flex-col w-1/3 my-2 px-3 rounded-md bg-white bg-opacity-10 ">
+                  <p className="font-semibold text-gray-300">Touch :  {touchStocks(item.versions)}</p>
+                  <p className="font-semibold text-gray-300">Control : {controlStocks(item.versions)}</p> 
+                  </div>
+                    </>
+                  )}
+                  
                   <ul className="list-disc pl-5 space-y-1">
                     {item.versions.map((version, versionIndex) => (
                       <li
@@ -84,41 +114,8 @@ const Stocks = () => {
                 </div>
               )}
 
-              {/* Sub-types */}
-              {item.sub_types && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-300 mt-4 mb-2">
-                    Sub-types:
-                  </h3>
-                  <div className="space-y-3">
-                    {item.sub_types.map((subType, subIndex) => (
-                      <div
-                        key={subIndex}
-                        className="bg-gray-700 p-3 rounded-lg border border-gray-600"
-                      >
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-300 font-medium">
-                            {subType.type.toUpperCase()}
-                          </span>
-                          <span className="text-sm text-gray-400">
-                            Stock: {subType.stock}
-                          </span>
-                        </div>
-                        <ul className="list-disc pl-5 mt-2">
-                          {subType.versions.map((version, versionIndex) => (
-                            <li
-                              key={versionIndex}
-                              className="text-gray-400 text-sm"
-                            >
-                              {version.version}: {version.stock}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              
+              
             </div>
           ))}
         </div>
