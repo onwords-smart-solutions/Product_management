@@ -105,7 +105,7 @@ function Login() {
               name="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value.trim())}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
             <button
