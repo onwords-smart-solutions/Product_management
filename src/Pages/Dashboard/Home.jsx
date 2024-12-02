@@ -4,6 +4,7 @@ import { db } from '../../FireBase/Config';
 import { get, set, ref, remove, query } from 'firebase/database';
 import Loading from '../../Components/Loading/Loading';
 import { transformData } from '../../Commons/DatePad';  
+import { useSelector } from 'react-redux';
 
 
 function Home() {
@@ -11,7 +12,8 @@ function Home() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; 
-  const [loading, setLoading] = useState(true);  
+  const [loading, setLoading] = useState(true);   
+  const state = useSelector(state => state.auth); 
 
   const deleteProduct = (product_id) => { 
 
@@ -125,10 +127,15 @@ function Home() {
                         {item.installation_type ? item.installation_type : 'bulk entry'}
                       </td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.user}</td>
-                      <td className="py-2 px-4 border-b border-gray-700 font-bold text-red-500">
-                        <button
+                      <td className="py-2 px-4 border-b border-gray-700 font-bold text-red-500"> 
+                        {state.user.role == 'owner' && (
+                          <>
+                           <button
                         onClick={() => {deleteProduct(item.full_product_id)}}
-                        className="bg-gray-300 bg-opacity-15 hover:bg-opacity-20 active:bg-opacity-30 px-2 rounded-md pb-1">x</button></td>
+                        className="bg-gray-300 bg-opacity-15 hover:bg-opacity-20 active:bg-opacity-30 px-2 rounded-md pb-1">x</button>
+                          </>
+                        )}
+                       </td>
                     </tr>
                   ))
                 ) : (
