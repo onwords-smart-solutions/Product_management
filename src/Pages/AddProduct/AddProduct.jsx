@@ -144,18 +144,15 @@ function InputForm() {
               <option value="" disabled>
                 Select Device Type & version
               </option> 
+              <option value="3ch" className="flex justify-between">3chag</option>
+              <option value="3ch" className="flex justify-between">3chsg</option>
+              <option value="3ch" className="flex justify-between">3chct</option>
+              <option value="3ch" className="flex justify-between">3chsgsl</option>
+              <option value="3ch" className="flex justify-between">3chrb</option>
               {deviceTypes && deviceTypes.map((type) => ( 
-                type.sub_types && ( 
-                  type.sub_types.map((sub) => (
-                    <option value={`${type.type}${sub.type}`} className="flex justify-between">{type.type}{sub.type}</option>
-                  ))
-                ) 
-              ))
-              } 
-              {deviceTypes && deviceTypes.map((type) => ( 
-                !type.sub_types && (
-                  <option value={type.type} className="flex justify-between">{type.type}</option>
-                ) 
+                
+               <option value={type.type} className="flex justify-between">{type.type}</option>
+                
               ))
               }
               
