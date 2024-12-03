@@ -69,7 +69,9 @@ const Stocks = () => {
 
     <div className="min-h-screen bg-gray-900 py-6">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-200 mb-6">Stocks Overview</h1>
+        <h1 className="text-3xl font-bold text-gray-200 mb-6">Stocks Overview 
+          <small className="text-sm font-thin text-gray-400"> (Last updated: 2024-12-03 11:00 am)</small>
+          </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.map((item, index) => (
             <div 

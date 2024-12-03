@@ -1,65 +1,94 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../Commons/Navbar';
 import { db } from '../../FireBase/Config';
-import { get, set, ref, remove, query } from 'firebase/database';
+import { get, ref } from 'firebase/database';
 import Loading from '../../Components/Loading/Loading';
-import { transformData } from '../../Commons/DatePad';  
 import { useSelector } from 'react-redux';
-
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('full_product_id'); // Default filter
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]); // For date filtering
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; 
-  const [loading, setLoading] = useState(true);   
-  const state = useSelector(state => state.auth); 
+  const itemsPerPage = 20;
+  const [loading, setLoading] = useState(true);
+  const state = useSelector((state) => state.auth);
+  const [totalProducts, setTotalProducts] = useState(0);
 
-  const deleteProduct = (product_id) => { 
+  // Function to filter data by date range
+  const handleDateFilter = (dateObj) => {
+    const { startDate, endDate } = dateObj;
 
+    if (!startDate || !endDate) {
+      console.warn('Start Date or End Date is missing');
+      return;
+    }
+
+    // Parse start and end dates
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Filter data within the date range
+    const filteredByDate = data.filter((item) => {
+      const itemDate = new Date(item.date); // Assuming item.date is a valid date string
+      return itemDate >= start && itemDate <= end;
+    });
+
+    // Update filtered data state
+    setFilteredData(filteredByDate);
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  const deleteProduct = (product_id) => {
     const dataRefdb = ref(db, 'products_management/products');
+
     get(dataRefdb)
       .then((snapshot) => {
-        const currentData = snapshot.val(); 
+        const currentData = snapshot.val();
 
-        const new_data = currentData.filter((data) => data.full_product_id != product_id)
-        
+        const new_data = currentData.filter(
+          (data) => data.full_product_id !== product_id
+        );
+
         set(dataRefdb, new_data).then(() => {
-          console.log('updated successfully!') 
-          setData(data.filter(d => d.full_product_id != product_id))
-        })
-  
+          console.log('updated successfully!');
+          setData(data.filter((d) => d.full_product_id !== product_id));
+        });
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-    }
-
- 
-
+  };
 
   useEffect(() => {
     const dataRefdb = ref(db, 'products_management/products');
+
     get(dataRefdb)
       .then((snapshot) => {
         const fetchedData = snapshot.val();
-         console.log((fetchedData.length));  
-        
-        setData(transformData(fetchedData) || []); 
-        setLoading(false)
+        const reverseSortedProducts = fetchedData.reverse();
+
+        setData(reverseSortedProducts);
+        setFilteredData(reverseSortedProducts); // Initially, no date filter
+        setTotalProducts(reverseSortedProducts.length);
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
   }, []);
 
-  const filteredData = data.filter((item) =>
-    item.full_product_id.toLowerCase().includes(searchQuery.toLowerCase())
+  const searchFilteredData = filteredData.filter((item) =>
+    item[filterType]?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = searchFilteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+  const totalPages = Math.ceil(searchFilteredData.length / itemsPerPage);
 
   const handlePageChange = (page) => {
     if (page > 0 && page <= totalPages) {
@@ -70,7 +99,11 @@ function Home() {
   const getPaginationRange = () => {
     const delta = 2; // Number of pages to show around the current page
     const range = [];
-    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+    for (
+      let i = Math.max(2, currentPage - delta);
+      i <= Math.min(totalPages - 1, currentPage + delta);
+      i++
+    ) {
       range.push(i);
     }
     if (currentPage - delta > 2) {
@@ -79,20 +112,31 @@ function Home() {
     if (currentPage + delta < totalPages - 1) {
       range.push('...');
     }
-    return [1, ...range, totalPages].filter((value, index, self) => self.indexOf(value) === index);
+    return [1, ...range, totalPages].filter(
+      (value, index, self) => self.indexOf(value) === index
+    );
   };
 
   return (
-    <> 
-    {loading && <Loading />}
-      <Navbar />
+    <>
+      {loading && <Loading />}
+      <Navbar totalProducts={totalProducts} handleDateFilter={handleDateFilter} />
       <div className="bg-gray-900 text-gray-300 min-h-screen">
         <div className="container mx-auto px-4 py-6">
-          {/* Search Input */}
-          <div className="mb-6">
+          {/* Filter Controls */}
+          <div className="mb-6 flex space-x-4">
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="rounded-md px-3 py-2 border border-gray-700 bg-gray-800 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
+            >
+              <option value="full_product_id">Product ID</option>
+              <option value="product_type">Product Type</option>
+              <option value="user">Entered By</option>
+            </select>
             <input
               type="text"
-              placeholder="Search by Product ID..."
+              placeholder={`Search by ${filterType.replace('_', ' ')}`}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -122,20 +166,22 @@ function Home() {
                       <td className="py-2 px-4 border-b border-gray-700">{item.date}</td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.full_product_id}</td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.product_type}</td>
-                      
                       <td className="py-2 px-4 border-b border-gray-700">
-                        {item.installation_type ? item.installation_type : 'bulk entry'}
+                        {item.installation_type ? item.installation_type : ''}
                       </td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.user}</td>
-                      <td className="py-2 px-4 border-b border-gray-700 font-bold text-red-500"> 
-                        {state.user.role == 'owner' && (
-                          <>
-                           <button
-                        onClick={() => {deleteProduct(item.full_product_id)}}
-                        className="bg-gray-300 bg-opacity-15 hover:bg-opacity-20 active:bg-opacity-30 px-2 rounded-md pb-1">x</button>
-                          </>
+                      <td className="py-2 px-4 border-b border-gray-700 font-bold text-red-500">
+                        {state.user.role === 'owner' && (
+                          <button
+                            onClick={() => {
+                              deleteProduct(item.full_product_id);
+                            }}
+                            className="bg-gray-300 bg-opacity-15 hover:bg-opacity-20 active:bg-opacity-30 px-2 rounded-md pb-1"
+                          >
+                            x
+                          </button>
                         )}
-                       </td>
+                      </td>
                     </tr>
                   ))
                 ) : (

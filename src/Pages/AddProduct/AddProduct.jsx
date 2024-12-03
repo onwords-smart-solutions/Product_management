@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"; 
 import { db } from '../../FireBase/Config';
-import { get, ref, set  } from 'firebase/database';
+import { get, ref, set, query, orderByChild } from 'firebase/database';
 import Navbar from "../../Commons/Navbar";
 import { todayFormatted } from "../../Commons/DatePad"; 
 import { useSelector } from "react-redux";
@@ -44,7 +44,9 @@ function InputForm() {
   const AddProductSubmit = () => { 
 
     const dataRefdb = ref(db, 'products_management/products'); 
-    const typeRef = ref(db, 'products_management/device_types'); 
+    const typeRef = ref(db, 'products_management/device_types');  
+
+    
 
     get(dataRefdb)
       .then((snapshot) => {

@@ -22,13 +22,14 @@
 
   export const editor_emails = [
     "jeyabalan@onwords.in",
-    "shankarasaravanan@onwords.in",
+    "shankarasaravanan@onwords.in", 
+    "shibil@onwords.in",
   ] 
 
   export const owner_emails = [
     "prem@onwords.in ",
     "ahmed.anwar@onwords.in", 
-    "shibil@onwords.in",
+   
   ]
  
 
