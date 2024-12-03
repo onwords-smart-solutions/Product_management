@@ -45,6 +45,7 @@ function InputForm() {
 
     const dataRefdb = ref(db, 'products_management/products'); 
     const typeRef = ref(db, 'products_management/device_types');  
+   
 
     
 
@@ -102,7 +103,10 @@ function InputForm() {
             })  
             set(typeRef, new_stock_type_list).then(() => {
               console.log('stock updated!')
-            })
+            })  
+
+           
+
           } 
           else(setUniqueError('product id/s already exists!'))
 

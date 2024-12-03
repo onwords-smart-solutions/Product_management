@@ -10,10 +10,16 @@ const Stocks = () => {
   const [data, setData] = useState([]);  
   const [selectedItem, setSelectedItem] = useState(null);  
   const [showModal, setShowModal] = useState(false);  
-  const state = useSelector(state => state.auth); 
+  const state = useSelector(state => state.auth);  
+  const [lastUpdated, setLastUpdated] = useState({}); 
 
   useEffect(() => {
-    const getDataRef = ref(db, 'products_management/device_types')
+    const getDataRef = ref(db, 'products_management/device_types') 
+    const lastModifiedRef = ref(db, 'products_management/last_modified') 
+
+    get(lastModifiedRef).then((res) => {
+      setLastUpdated(res.val()); 
+    })
     
     get(getDataRef).then((res) => {
       setData(res.val()) 
@@ -45,7 +51,9 @@ const Stocks = () => {
   
 
   function updateStockFB(new_type) {
-    const updateRef = ref(db, 'products_management/device_types')
+    const updateRef = ref(db, 'products_management/device_types') 
+    const lastModifiedRef = ref(db, 'products_management/last_modified') 
+
     let total_count = 0; 
     for (let i=0; i<new_type.versions.length; i++) { 
       total_count = total_count + new_type.versions[i].stock; 
@@ -57,6 +65,11 @@ const Stocks = () => {
     set(updateRef, updated_list).then(() => {
       console.log('updated successfully!') 
       setData(updated_list); 
+    }) 
+
+    set(lastModifiedRef, {date: `${new Date()}`, user: state.user.email}).then(() => {
+      console.log('updated last modified date.') 
+      setLastUpdated({date: `${new Date()}`, user: state.user.email})
     })
   }
 
@@ -70,7 +83,7 @@ const Stocks = () => {
     <div className="min-h-screen bg-gray-900 py-6">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold text-gray-200 mb-6">Stocks Overview 
-          <small className="text-sm font-thin text-gray-400"> (Last updated: 2024-12-03 11:00 am)</small>
+          <small className="text-sm font-thin text-gray-400"> (Last updated: {lastUpdated?.date?.slice(0, 24)} by {lastUpdated.user})</small>
           </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.map((item, index) => (
