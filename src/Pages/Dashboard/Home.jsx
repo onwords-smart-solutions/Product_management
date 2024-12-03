@@ -9,14 +9,30 @@ function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('full_product_id'); // Default filter
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]); // For date filtering
+  const [filteredData, setFilteredData] = useState([]); // Filtered data
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
   const [loading, setLoading] = useState(true);
   const state = useSelector((state) => state.auth);
   const [totalProducts, setTotalProducts] = useState(0);
 
-  // Function to filter data by date range
+  // Function to update filtered data based on search and date filters
+  const updateFilteredData = (updatedData) => {
+    setFilteredData(updatedData);
+    setTotalProducts(updatedData.length); // Update the total count
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  // Handle search query changes
+  const handleSearch = (query) => {
+    const lowerQuery = query.toLowerCase();
+    const filtered = data.filter((item) =>
+      item[filterType]?.toLowerCase().includes(lowerQuery)
+    );
+    updateFilteredData(filtered);
+  };
+
+  // Handle date range filtering
   const handleDateFilter = (dateObj) => {
     const { startDate, endDate } = dateObj;
 
@@ -25,19 +41,15 @@ function Home() {
       return;
     }
 
-    // Parse start and end dates
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // Filter data within the date range
     const filteredByDate = data.filter((item) => {
       const itemDate = new Date(item.date); // Assuming item.date is a valid date string
       return itemDate >= start && itemDate <= end;
     });
 
-    // Update filtered data state
-    setFilteredData(filteredByDate);
-    setCurrentPage(1); // Reset to the first page
+    updateFilteredData(filteredByDate);
   };
 
   const deleteProduct = (product_id) => {
@@ -52,7 +64,7 @@ function Home() {
         );
 
         set(dataRefdb, new_data).then(() => {
-          console.log('updated successfully!');
+          console.log('Updated successfully!');
           setData(data.filter((d) => d.full_product_id !== product_id));
         });
       })
@@ -70,8 +82,7 @@ function Home() {
         const reverseSortedProducts = fetchedData.reverse();
 
         setData(reverseSortedProducts);
-        setFilteredData(reverseSortedProducts); // Initially, no date filter
-        setTotalProducts(reverseSortedProducts.length);
+        updateFilteredData(reverseSortedProducts); // Initially, no filter applied
         setLoading(false);
       })
       .catch((error) => {
@@ -79,16 +90,12 @@ function Home() {
       });
   }, []);
 
-  const searchFilteredData = filteredData.filter((item) =>
-    item[filterType]?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedData = searchFilteredData.slice(
+  const paginatedData = filteredData.slice(
     startIndex,
     startIndex + itemsPerPage
   );
-  const totalPages = Math.ceil(searchFilteredData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const handlePageChange = (page) => {
     if (page > 0 && page <= totalPages) {
@@ -97,7 +104,7 @@ function Home() {
   };
 
   const getPaginationRange = () => {
-    const delta = 2; // Number of pages to show around the current page
+    const delta = 2;
     const range = [];
     for (
       let i = Math.max(2, currentPage - delta);
@@ -140,7 +147,7 @@ function Home() {
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
-                setCurrentPage(1); // Reset to the first page after search
+                handleSearch(e.target.value);
               }}
               className="w-full rounded-md px-3 py-2 border border-gray-700 bg-gray-800 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm"
             />
@@ -167,15 +174,13 @@ function Home() {
                       <td className="py-2 px-4 border-b border-gray-700">{item.full_product_id}</td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.product_type}</td>
                       <td className="py-2 px-4 border-b border-gray-700">
-                        {item.installation_type ? item.installation_type : ''}
+                        {item.installation_type || ''}
                       </td>
                       <td className="py-2 px-4 border-b border-gray-700">{item.user}</td>
                       <td className="py-2 px-4 border-b border-gray-700 font-bold text-red-500">
                         {state.user.role === 'owner' && (
                           <button
-                            onClick={() => {
-                              deleteProduct(item.full_product_id);
-                            }}
+                            onClick={() => deleteProduct(item.full_product_id)}
                             className="bg-gray-300 bg-opacity-15 hover:bg-opacity-20 active:bg-opacity-30 px-2 rounded-md pb-1"
                           >
                             x
@@ -216,10 +221,10 @@ function Home() {
                 key={index}
                 onClick={() => typeof page === 'number' && handlePageChange(page)}
                 className={`px-4 py-2 rounded-md shadow-md transition ${
-                  currentPage === page
-                    ? 'bg-green-700 text-white'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
+                  page === currentPage
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-600 hover:bg-gray-700 text-gray-300'
+                } ${typeof page !== 'number' && 'cursor-default'}`}
                 disabled={typeof page !== 'number'}
               >
                 {page}

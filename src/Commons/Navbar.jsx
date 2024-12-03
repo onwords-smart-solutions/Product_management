@@ -69,7 +69,9 @@ const Navbar = (props) => {
                     className="bg-gray-600 my-2 text-gray-200 w-32 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-800 hover:text-white transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-700"
                   >
                     Select Date
-                  </button>
+                  </button> 
+
+                  <button className="text-gray-300">Total: {props.totalProducts}</button>
                
               
             </div>
